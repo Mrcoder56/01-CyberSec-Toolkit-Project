@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>CyberSec Toolkit – Password Analyzer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header>
+        <div>
+            <div class="logo">🔐 CyberSec Toolkit</div>
+            <div class="logo-sub">Educational Security Lab</div>
+        </div>
+        <div class="header-badge">🟢 Safe &amp; Offline</div>
+    </header>
+
+    <div class="tabs">
+        <div class="tab active" onclick="switchTab('analyzer')">🔍 Password Analyzer</div>
+        <div class="tab" onclick="switchTab('generator')">⚙️ Generator</div>
+        <div class="tab" onclick="switchTab('hash')">🧬 Hash Tool</div>
+        <div class="tab" onclick="switchTab('phishing')">🎣 Phishing Detector</div>
+        <div class="tab" onclick="switchTab('cipher')">🔤 Caesar Cipher</div>
+        <div class="tab" onclick="switchTab('quiz')">🧠 Security Quiz</div>
+    </div>
+
+    <main>
+
+        <!-- ══ TAB 1: PASSWORD ANALYZER ══ -->
+        <div class="panel active" id="panel-analyzer">
+            <div class="card">
+                <div class="card-title"><span class="icon">🔍</span> Password Strength Analyzer</div>
+                <div class="input-wrap">
+                    <input type="password" id="pwInput" placeholder="Type a password to analyze…"
+                        oninput="analyzePassword()" autocomplete="off" />
+                    <button class="show-hide" onclick="togglePwVis()" id="showHideBtn">👁</button>
+                </div>
+                <div class="score-wrap">
+                    <div class="score-ring">
+                        <svg width="90" height="90" viewBox="0 0 90 90">
+                            <circle class="bg-circle" cx="45" cy="45" r="37" />
+                            <circle class="fg-circle" id="scoreCircle" cx="45" cy="45" r="37" stroke-dasharray="232"
+                                stroke-dashoffset="232" />
+                        </svg>
+                        <div class="score-num" id="scoreNum">0</div>
+                    </div>
+                    <div style="flex:1">
+                        <div class="strength-label" id="strengthLabel" style="color:var(--text2)">Enter a password</div>
+                        <div class="strength-bar-wrap">
+                            <div class="strength-bar" id="strengthBar"></div>
+                        </div>
+                        <div style="font-size:.8rem;color:var(--text2)" id="entropyLabel">Entropy: 0 bits</div>
+                    </div>
+                </div>
+                <div class="checks-grid" id="checksGrid">
+                    <div class="check-item fail" id="chk-len">
+                        <div class="check-dot"></div>At least 12 characters
+                    </div>
+                    <div class="check-item fail" id="chk-upper">
+                        <div class="check-dot"></div>Uppercase letters
+                    </div>
+                    <div class="check-item fail" id="chk-lower">
+                        <div class="check-dot"></div>Lowercase letters
+                    </div>
+                    <div class="check-item fail" id="chk-num">
+                        <div class="check-dot"></div>Numbers
+                    </div>
+                    <div class="check-item fail" id="chk-sym">
+                        <div class="check-dot"></div>Special symbols
+                    </div>
+                    <div class="check-item fail" id="chk-nocommon">
+                        <div class="check-dot"></div>Not a common password
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title"><span class="icon">⏱</span> Estimated Crack Time</div>
+                <div class="crack-time" id="crackTimeDiv">
+                    <div class="crack-row"><span>Online attack (100/sec)</span><span class="crack-val"
+                            id="ct-online">—</span></div>
+                    <div class="crack-row"><span>Offline slow hash (10K/sec)</span><span class="crack-val"
+                            id="ct-slow">—</span></div>
+                    <div class="crack-row"><span>Offline fast hash (10B/sec)</span><span class="crack-val"
+                            id="ct-fast">—</span></div>
+                    <div class="crack-row"><span>Supercomputer (1T/sec)</span><span class="crack-val"
+                            id="ct-super">—</span></div>
+                </div>
+                <div class="info-box">
+                    <strong>💡 How crack time is calculated:</strong> Based on password character set size and length.
+                    A password with uppercase + lowercase + numbers + symbols uses a pool of ~95 chars.
+                    Combinations = pool<sup>length</sup>. At 10 billion guesses/sec (GPU cracking), even a 10-char
+                    password can fall quickly.
+                </div>
+            </div>
+        </div>
+
+        <!-- ══ TAB 2: PASSWORD GENERATOR ══ -->
+        <div class="panel" id="panel-generator">
+            <div class="card">
+                <div class="card-title"><span class="icon">⚙️</span> Secure Password Generator</div>
+                <div class="range-wrap">
+                    <label>Length</label>
+                    <input type="range" min="8" max="64" value="16" id="genLen"
+                        oninput="updateLenLabel();generatePassword()" />
+                    <div class="range-val" id="genLenVal">16</div>
+                </div>
+                <div class="gen-options">
+                    <label class="checkbox-label"><input type="checkbox" id="genUpper" checked
+                            onchange="generatePassword()"> Uppercase (A-Z)</label>
+                    <label class="checkbox-label"><input type="checkbox" id="genLower" checked
+                            onchange="generatePassword()"> Lowercase (a-z)</label>
+                    <label class="checkbox-label"><input type="checkbox" id="genNum" checked
+                            onchange="generatePassword()"> Numbers (0-9)</label>
+                    <label class="checkbox-label"><input type="checkbox" id="genSym" checked
+                            onchange="generatePassword()"> Symbols (!@#…)</label>
+                    <label class="checkbox-label"><input type="checkbox" id="genNoAmb" onchange="generatePassword()">
+                        Exclude ambiguous (0,O,l,1)</label>
+                </div>
+                <div class="gen-output" id="genOutput">
+                    <span id="genPw" style="color:var(--green)">Click Generate…</span>
+                    <button class="copy-btn" onclick="copyPassword()">📋 Copy</button>
+                </div>
+                <div style="display:flex;gap:.8rem;margin-top:1rem;flex-wrap:wrap">
+                    <button class="btn btn-primary" onclick="generatePassword()">⚙️ Generate</button>
+                    <button class="btn btn-success" onclick="generateMultiple()">📋 Generate 5</button>
+                </div>
+                <div id="multiPw" style="margin-top:1rem"></div>
+            </div>
+            <div class="card">
+                <div class="card-title"><span class="icon">📚</span> Passphrase Generator</div>
+                <p style="font-size:.85rem;color:var(--text2);margin-bottom:1rem">Passphrases are long, memorable, and
+                    highly secure. Based on the <strong>Diceware</strong> concept.</p>
+                <button class="btn btn-primary" onclick="genPassphrase()">🎲 Generate Passphrase</button>
+                <div class="gen-output" style="margin-top:1rem">
+                    <span id="passphrase" style="color:var(--yellow);font-size:.9rem">Click to generate…</span>
+                    <button class="copy-btn" onclick="copyPassphrase()">📋 Copy</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══ TAB 3: HASH TOOL ══ -->
+        <div class="panel" id="panel-hash">
+            <div class="card">
+                <div class="card-title"><span class="icon">🧬</span> Text Hashing Tool</div>
+                <div class="hash-tabs">
+                    <div class="hash-tab active" onclick="setHashAlgo('sha256',this)">SHA-256</div>
+                    <div class="hash-tab" onclick="setHashAlgo('sha1',this)">SHA-1</div>
+                    <div class="hash-tab" onclick="setHashAlgo('md5sim',this)">MD5 (sim)</div>
+                </div>
+                <textarea id="hashInput" placeholder="Enter text to hash…" oninput="computeHash()"></textarea>
+                <div style="font-size:.8rem;color:var(--text2);margin:.5rem 0">Hash output:</div>
+                <div class="hash-result" id="hashOutput">—</div>
+                <div style="font-size:.78rem;color:var(--text2);margin-top:.5rem" id="hashLen"></div>
+                <div class="info-box" style="margin-top:1rem">
+                    <strong>⚠️ Educational Note:</strong> MD5 and SHA-1 are considered <strong>broken</strong> for
+                    security use.
+                    Always use <strong>SHA-256</strong> or better for cryptographic purposes. Hashing is one-way — you
+                    cannot
+                    reverse a hash back to the original text (without brute force).
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title"><span class="icon">🔬</span> Hash Comparison (Integrity Check)</div>
+                <p style="font-size:.84rem;color:var(--text2);margin-bottom:1rem">Verify if two strings produce the same
+                    hash — simulates file integrity checking.</p>
+                <input type="text" id="cmpA" placeholder="String A" oninput="compareHashes()"
+                    style="margin-bottom:.7rem" />
+                <input type="text" id="cmpB" placeholder="String B" oninput="compareHashes()" />
+                <div id="cmpResult" style="margin-top:.8rem;font-size:.88rem;font-weight:700"></div>
+            </div>
+        </div>
+
+        <!-- ══ TAB 4: PHISHING DETECTOR ══ -->
+        <div class="panel" id="panel-phishing">
+            <div class="card">
+                <div class="card-title"><span class="icon">🎣</span> URL Phishing Detector</div>
+                <p style="font-size:.84rem;color:var(--text2);margin-bottom:1rem">
+                    Analyze a URL for common phishing red flags. This is a <strong>heuristic</strong> tool — always use
+                    caution.
+                </p>
+                <div class="input-wrap">
+                    <input type="text" id="urlInput" placeholder="Paste a URL (e.g. https://paypa1-secure.xyz/login)"
+                        oninput="analyzeUrl()" />
+                </div>
+                <div id="urlVerdict"></div>
+                <div class="url-score-wrap" id="urlFlags"></div>
+                <div class="info-box" style="margin-top:1.2rem">
+                    <strong>🧠 What to look for in phishing URLs:</strong><br />
+                    • Misspelled brand names (<em>paypa<strong>1</strong>.com</em>, <em>g00gle.com</em>)<br />
+                    • Suspicious TLDs (<em>.xyz, .tk, .cc, .pw</em>)<br />
+                    • Hyphens in domain (<em>paypal-secure-login.com</em>)<br />
+                    • IP address instead of domain (<em>http://192.168.1.1/login</em>)<br />
+                    • Excessive subdomains (<em>login.paypal.com.evil.com</em>)<br />
+                    • No HTTPS<br />
+                    • URL shorteners hiding real destination
+                </div>
+            </div>
+        </div>
+
+        <!-- ══ TAB 5: CAESAR CIPHER ══ -->
+        <div class="panel" id="panel-cipher">
+            <div class="card">
+                <div class="card-title"><span class="icon">🔤</span> Caesar Cipher Encryption</div>
+                <p style="font-size:.84rem;color:var(--text2);margin-bottom:1rem">
+                    One of history's oldest ciphers. Julius Caesar used a shift of 3.
+                    ROT13 (shift 13) is still used to hide spoilers online!
+                </p>
+                <div class="range-wrap">
+                    <label>Shift (key)</label>
+                    <input type="range" min="1" max="25" value="13" id="shiftVal" oninput="updateShift();runCipher()" />
+                    <div class="range-val" id="shiftDisplay">13</div>
+                </div>
+                <textarea id="cipherInput" placeholder="Type text to encrypt / decrypt…" oninput="runCipher()"
+                    style="margin-bottom:1rem"></textarea>
+                <div class="cipher-grid">
+                    <div>
+                        <div style="font-size:.8rem;color:var(--text2);margin-bottom:.4rem">🔒 Encrypted</div>
+                        <div class="cipher-result" id="encryptOut">—</div>
+                    </div>
+                    <div>
+                        <div style="font-size:.8rem;color:var(--text2);margin-bottom:.4rem">🔓 Decrypted (from
+                            encrypted)</div>
+                        <div class="cipher-result" id="decryptOut" style="color:var(--green)">—</div>
+                    </div>
+                </div>
+                <button class="btn btn-primary" style="margin-top:1rem" onclick="bruteForce()">🔨 Brute Force All 25
+                    Shifts</button>
+                <div id="bruteOut" style="margin-top:1rem"></div>
+                <div class="info-box" style="margin-top:1rem">
+                    <strong>⚠️ Why Caesar Cipher is insecure:</strong> Only 25 possible keys.
+                    Any attacker can try all 25 in seconds. Modern encryption (AES-256) has
+                    2<sup>256</sup> possible keys — completely unbreakable by brute force.
+                </div>
+            </div>
+        </div>
+
+        <!-- ══ TAB 6: SECURITY QUIZ ══ -->
+        <div class="panel" id="panel-quiz">
+            <div class="card">
+                <div class="card-title"><span class="icon">🧠</span> Cybersecurity Knowledge Quiz</div>
+                <div id="quizContainer"></div>
+            </div>
+        </div>
+
+    </main>
+    <script src="script.js">
+
+    </script>
+
+</body>
+
+</html>
