@@ -1,7 +1,7 @@
  
-        /* ════════════════════════════════════════
-           UTILITIES
-        ════════════════════════════════════════ */
+        
+          / UTILITIES
+    
         function switchTab(id) {
             document.querySelectorAll('.tab').forEach((t, i) => t.classList.remove('active'));
             document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
