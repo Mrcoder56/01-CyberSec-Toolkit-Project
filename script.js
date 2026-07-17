@@ -224,7 +224,7 @@
             const hb = toHex(await crypto.subtle.digest('SHA-256', enc(b)));
             const el = document.getElementById('cmpResult');
             if (ha === hb) { el.textContent = '✅ Hashes MATCH — identical content'; el.style.color = 'var(--green)' }
-            else { el.textContent = '❌ Hashes DO NOT match — content differs'; el.style.color = 'var(--red)' }
+            else { el.textContent = '❌ Hashes Do Not Match — content differs'; el.style.color = 'var(--red)' }
         }
 
         /* ════════════════════════════════════════
@@ -258,7 +258,7 @@
             const verdictEl = document.getElementById('urlVerdict');
             if (dangerScore === 0) { verdictEl.innerHTML = `<div class="verdict-box safe">✅ Appears Safe — no red flags detected</div>`; }
             else if (dangerScore < 40) { verdictEl.innerHTML = `<div class="verdict-box warn">⚠️ Suspicious — exercise caution (risk score: ${dangerScore})</div>`; }
-            else { verdictEl.innerHTML = `<div class="verdict-box danger">🚨 HIGH RISK — likely phishing URL (risk score: ${dangerScore})</div>`; }
+            else { verdictEl.innerHTML = `<div class="verdict-box danger">🚨 HIGH RISK — likely Phishing URL (risk score: ${dangerScore})</div>`; }
 
             document.getElementById('urlFlags').innerHTML = flags.map(f =>
                 `<div class="url-flag ${f.type}"><span class="flag-icon">${f.icon}</span><span>${f.msg}</span></div>`
