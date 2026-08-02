@@ -169,7 +169,7 @@
         }
 
         /* ════════════════════════════════════════
-           TAB 3 – HASH TOOL (Web Crypto API)
+           TAB 3 – HASH TOOL 
         ════════════════════════════════════════ */
         let currentAlgo = 'sha256';
 
