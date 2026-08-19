@@ -11,10 +11,10 @@ Type any password and get:
 - Live strength score (0–100)
 - Entropy calculation (in bits)
 - Estimated crack time across 4 attack scenarios:
-  - Online attack
-  - Fast GPU attack
-  - Supercomputer attack
-  - Offline attack
+   - Online attack
+   - Fast GPU attack
+   - Supercomputer attack
+   - Offline attack
 - Security requirements checklist
 
 ###  What You'll Learn
