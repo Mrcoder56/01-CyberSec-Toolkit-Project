@@ -192,7 +192,7 @@
                 const buf = await crypto.subtle.digest(algo, new TextEncoder().encode(txt));
                 hex = [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
                 const bits = currentAlgo === 'sha1' ? 160 : 256;
-                const warn = currentAlgo === 'sha1' ? ' — ⚠️ SHA-1 is WEAK' : '';
+                const warn = currentAlgo === 'sha1' ? ' — ⚠️ SHA-1 is Weak' : '';
                 document.getElementById('hashLen').textContent = `Output: ${hex.length} hex chars (${bits} bits)${warn}`;
             }
             document.getElementById('hashOutput').textContent = hex;
